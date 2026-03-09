@@ -1,5 +1,6 @@
 [workspace]
 members = [
+  "examples/api-contracts",
   "examples/ownership-playbook",
   "examples/lifetime-lab",
   "examples/tokio-playbook",

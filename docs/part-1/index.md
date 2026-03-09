@@ -28,6 +28,10 @@ flowchart TD
 - compiler error를 실패 메시지가 아니라 설계 피드백으로 읽는다.
 - `clone`은 쉬운 탈출구지만, 장기적으로는 ownership 경계를 흐린다는 점을 계속 의식한다.
 
+## 파일럿 챕터
+
+- [왜 Rust는 이렇게 빡빡하게 느껴질까](/part-1/strictness)
+
 ## 현재 파일럿 이후 확장할 주제
 
 <PartRoadmap part-id="mindset-shift" />

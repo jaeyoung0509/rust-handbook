@@ -25,6 +25,7 @@ export const book = {
   description:
     "Python/Go 개발자가 Rust를 왜 배우고 언제 써야 하는지까지 이해하도록 돕는 deep dive handbook",
   repository: "https://github.com/jaeyoung0509/rust-handbook",
+  homepage: "https://jaeyoung0509.github.io/rust-handbook/",
 };
 
 export const parts: PartMeta[] = [
@@ -36,7 +37,17 @@ export const parts: PartMeta[] = [
       "GC 언어와 Rust의 메모리·동시성 모델 차이를 먼저 맞추고, Cargo와 compiler diagnostics를 읽는 감각을 잡는다.",
     overview: "/part-1/",
     accent: "teal",
-    chapters: [],
+    chapters: [
+      {
+        id: "why-rust-feels-strict",
+        title: "왜 Rust는 이렇게 빡빡하게 느껴질까",
+        description:
+          "runtime 비용을 compile-time contract로 옮긴다는 관점에서 Rust의 엄격함을 설명한다.",
+        route: "/part-1/strictness",
+        prerequisites: ["Python 또는 Go 실무 경험"],
+        status: "pilot",
+      },
+    ],
     plannedTopics: [
       "왜 Rust가 Python/Go보다 더 많은 제약을 두는가",
       "stack, heap, ownership을 보는 기본 프레임",
@@ -76,7 +87,17 @@ export const parts: PartMeta[] = [
       "struct, module, impl, trait, generics, `Option`/`Result`, `?`, custom error를 API 계약 관점으로 다룬다.",
     overview: "/part-3/",
     accent: "slate",
-    chapters: [],
+    chapters: [
+      {
+        id: "traits-as-contracts",
+        title: "Trait와 Generic: capability contract로 읽기",
+        description:
+          "trait, impl, generic bound를 재사용 문법이 아니라 API 계약으로 이해하도록 돕는다.",
+        route: "/part-3/traits",
+        prerequisites: ["ownership", "borrowing", "기본 함수 시그니처 읽기"],
+        status: "pilot",
+      },
+    ],
     plannedTopics: [
       "trait가 인터페이스가 아니라 capability contract인 이유",
       "`From`/`Into`, `AsRef`, `Default`로 ergonomics 높이기",
