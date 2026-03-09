@@ -1,0 +1,9 @@
+/node_modules
+/target
+/docs/.vitepress/cache
+/docs/.vitepress/dist
+/dist
+/.pnpm-store
+/.DS_Store
+/coverage
+/trybuild

@@ -1,0 +1,17 @@
+[workspace]
+members = [
+  "examples/ownership-playbook",
+  "examples/lifetime-lab",
+  "examples/tokio-playbook",
+  "examples/ui-harness",
+]
+resolver = "2"
+
+[workspace.package]
+edition = "2024"
+license = "MIT"
+rust-version = "1.86"
+
+[workspace.dependencies]
+tokio = { version = "1.44", features = ["macros", "rt-multi-thread", "sync", "time"] }
+trybuild = "1.0.116"

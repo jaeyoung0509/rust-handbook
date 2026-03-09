@@ -1,0 +1,23 @@
+error: future cannot be sent between threads safely
+  --> tests/ui/tokio_spawn_requires_send.rs:8:18
+   |
+8  |       tokio::spawn(async move {
+   |  __________________^
+9  | |         println!("{state}");
+10 | |     });
+   | |_____^ future created by async block is not `Send`
+   |
+   = help: within `{async block@$DIR/tests/ui/tokio_spawn_requires_send.rs:8:18: 8:28}`, the trait `Send` is not implemented for `Rc<String>`
+note: captured value is not `Send`
+  --> tests/ui/tokio_spawn_requires_send.rs:9:20
+   |
+9  |         println!("{state}");
+   |                    ^^^^^ has type `Rc<String>` which is not `Send`
+note: required by a bound in `tokio::spawn`
+  --> $CARGO/tokio-$VERSION/src/task/spawn.rs
+   |
+   |     pub fn spawn<F>(future: F) -> JoinHandle<F::Output>
+   |            ----- required by a bound in this function
+   |     where
+   |         F: Future + Send + 'static,
+   |                     ^^^^ required by this bound in `spawn`

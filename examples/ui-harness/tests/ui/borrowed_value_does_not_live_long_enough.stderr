@@ -1,0 +1,11 @@
+error[E0106]: missing lifetime specifier
+ --> tests/ui/borrowed_value_does_not_live_long_enough.rs:2:40
+  |
+2 | fn longest(left: &str, right: &str) -> &str {
+  |                  ----         ----     ^ expected named lifetime parameter
+  |
+  = help: this function's return type contains a borrowed value, but the signature does not say whether it is borrowed from `left` or `right`
+help: consider introducing a named lifetime parameter
+  |
+2 | fn longest<'a>(left: &'a str, right: &'a str) -> &'a str {
+  |           ++++        ++              ++          ++

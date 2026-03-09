@@ -1,0 +1,174 @@
+:root {
+  --vp-c-brand-1: #0f766e;
+  --vp-c-brand-2: #0e8f86;
+  --vp-c-brand-3: #13a39a;
+  --vp-c-brand-soft: rgba(15, 118, 110, 0.14);
+  --vp-c-sponsor: #d97706;
+  --vp-home-hero-name-background: linear-gradient(120deg, #0f766e 5%, #d97706 42%, #155e75 100%);
+  --vp-home-hero-image-background-image: radial-gradient(circle at top, rgba(217, 119, 6, 0.24), transparent 50%),
+    radial-gradient(circle at 20% 20%, rgba(14, 143, 134, 0.28), transparent 45%);
+  --vp-home-hero-image-filter: blur(68px);
+  --vp-font-family-base: "IBM Plex Sans KR", "Pretendard Variable", "SUIT", "Noto Sans KR", sans-serif;
+  --vp-font-family-mono: "JetBrains Mono", "SFMono-Regular", "Menlo", monospace;
+}
+
+body {
+  background:
+    radial-gradient(circle at top left, rgba(14, 143, 134, 0.08), transparent 28%),
+    radial-gradient(circle at right, rgba(217, 119, 6, 0.08), transparent 24%);
+}
+
+.VPNavBar {
+  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.VPHero .name {
+  letter-spacing: -0.04em;
+}
+
+.VPHero .text {
+  max-width: 13ch;
+}
+
+.VPHero .tagline {
+  max-width: 42rem;
+  font-size: 1.05rem;
+}
+
+.vp-doc h2 {
+  border-top: none;
+  padding-top: 0;
+}
+
+.vp-doc .custom-block.tip {
+  border-color: rgba(15, 118, 110, 0.35);
+  background: rgba(15, 118, 110, 0.08);
+}
+
+.vp-doc .custom-block.warning {
+  border-color: rgba(217, 119, 6, 0.35);
+  background: rgba(217, 119, 6, 0.1);
+}
+
+.book-shell {
+  margin-top: 2.5rem;
+}
+
+.book-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.book-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 24px;
+  padding: 1.2rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(248, 250, 252, 0.92));
+  box-shadow: 0 24px 50px rgba(15, 23, 42, 0.06);
+  animation: rise 0.45s ease both;
+}
+
+.book-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, #0f766e, #d97706);
+}
+
+.book-card h3,
+.book-card h4 {
+  margin: 0.3rem 0 0.7rem;
+  line-height: 1.2;
+}
+
+.book-card p,
+.book-card li {
+  color: var(--vp-c-text-2);
+}
+
+.book-card ul {
+  padding-left: 1.1rem;
+}
+
+.book-card__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--vp-c-text-2);
+}
+
+.book-card__link {
+  font-weight: 700;
+  color: var(--vp-c-brand-1);
+}
+
+.book-card__pill {
+  display: inline-flex;
+  margin-top: 0.8rem;
+  border-radius: 999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #0f172a;
+  background: rgba(15, 118, 110, 0.12);
+}
+
+.book-card__pill[data-status="planned"] {
+  background: rgba(217, 119, 6, 0.14);
+}
+
+.mermaid-shell {
+  margin: 1.25rem 0;
+  overflow: hidden;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 20px;
+  padding: 1rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 250, 252, 0.94));
+}
+
+.mermaid-shell__canvas {
+  display: flex;
+  justify-content: center;
+}
+
+.mermaid-shell__canvas svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.mermaid-shell__error {
+  color: #b91c1c;
+  font-weight: 600;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .VPHero .text {
+    max-width: none;
+  }
+
+  .book-card {
+    border-radius: 18px;
+  }
+}
