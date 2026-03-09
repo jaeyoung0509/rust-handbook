@@ -7,6 +7,7 @@ Python/Go에 익숙한 개발자가 Rust를 깊게 이해하도록 설계한 Vit
 - 문법을 나열하지 않는다. Rust가 어떤 버그와 비용을 줄이려고 이런 제약을 두는지 먼저 설명한다.
 - lifetime, ownership, trait, async를 "외워서 쓰는 문법"이 아니라 "관계와 제약을 설계하는 언어"로 이해하게 만든다.
 - 문서에 보이는 Rust 코드는 모두 별도 Cargo workspace에서 실제로 컴파일하거나 테스트한다.
+- CI는 문서 품질 검증에 집중하고, Rust 예제 전체 검증은 필요할 때 수동으로 실행한다.
 - Mermaid, snippet include, 내부 링크는 CI에서 자동 검증해서 문서 품질 저하를 빠르게 잡는다.
 
 ## Layout
@@ -26,6 +27,7 @@ pnpm verify
 ```
 
 ```bash
+pnpm verify:full
 cargo test --workspace
 cargo clippy --workspace --all-targets -- -D warnings
 ```
@@ -48,7 +50,6 @@ cargo clippy --workspace --all-targets -- -D warnings
 - frontmatter shape validation
 - Mermaid fence parsing
 - 내부 링크와 snippet include 경로 확인
-- `cargo fmt --check`
-- `cargo clippy -- -D warnings`
-- `cargo test --workspace`
 - VitePress production build
+
+추가로 Rust 예제 전체 검증이 필요하면 `pnpm verify:full` 또는 `cargo test --workspace`를 수동으로 실행한다.

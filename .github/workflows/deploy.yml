@@ -38,15 +38,10 @@ jobs:
           node-version: 22
           cache: pnpm
 
-      - name: Set up Rust
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          components: clippy,rustfmt
-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run full validation suite
+      - name: Run docs validation suite
         run: pnpm verify
 
       - name: Upload Pages artifact

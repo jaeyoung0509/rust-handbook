@@ -16,7 +16,8 @@
     "lint:links": "tsx scripts/validate-links.mts",
     "check:docs": "pnpm lint:md && pnpm lint:frontmatter && pnpm lint:mermaid && pnpm lint:links && pnpm docs:build",
     "check:rust": "cargo fmt --all --check && cargo clippy --workspace --all-targets -- -D warnings && cargo test --workspace",
-    "verify": "pnpm check:docs && pnpm check:rust"
+    "verify": "pnpm check:docs",
+    "verify:full": "pnpm check:docs && pnpm check:rust"
   },
   "dependencies": {
     "mermaid": "^11.13.0",

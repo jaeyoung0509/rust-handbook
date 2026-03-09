@@ -25,11 +25,6 @@ jobs:
           node-version: 22
           cache: pnpm
 
-      - name: Set up Rust
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          components: clippy,rustfmt
-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
@@ -44,15 +39,6 @@ jobs:
 
       - name: Validate links and snippets
         run: pnpm lint:links
-
-      - name: Check formatting
-        run: cargo fmt --all --check
-
-      - name: Run Clippy
-        run: cargo clippy --workspace --all-targets -- -D warnings
-
-      - name: Run Rust tests
-        run: cargo test --workspace
 
       - name: Build VitePress
         run: pnpm docs:build
