@@ -47,6 +47,15 @@ export const parts: PartMeta[] = [
         prerequisites: ["Python 또는 Go 실무 경험"],
         status: "pilot",
       },
+      {
+        id: "compiler-clinic",
+        title: "Compiler Clinic: 에러 메시지를 설계 피드백으로 읽기",
+        description:
+          "ownership, lifetime, async 관련 에러 메시지를 분류하고 고치는 순서를 잡는다.",
+        route: "/part-1/compiler-clinic",
+        prerequisites: ["왜 Rust가 strict하게 느껴지는지에 대한 감각"],
+        status: "pilot",
+      },
     ],
     plannedTopics: [
       "왜 Rust가 Python/Go보다 더 많은 제약을 두는가",
@@ -126,6 +135,15 @@ export const parts: PartMeta[] = [
           "함수 시그니처, struct, iterator가 서로 다른 lifetime 문제를 어떻게 드러내는지 단계적으로 다룬다.",
         route: "/part-4/lifetimes",
         prerequisites: ["ownership", "borrowing", "reference semantics"],
+        status: "pilot",
+      },
+      {
+        id: "shared-ownership",
+        title: "Shared ownership: Rc, Arc, RefCell, interior mutability를 언제 쓰는가",
+        description:
+          "소유자가 하나가 아닐 때 어떤 도구를 써야 하는지와 runtime borrow checking의 tradeoff를 다룬다.",
+        route: "/part-4/shared-ownership",
+        prerequisites: ["ownership", "borrowing", "lifetime basics"],
         status: "pilot",
       },
     ],
