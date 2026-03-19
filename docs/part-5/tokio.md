@@ -73,6 +73,13 @@ Rust의 차이는 `Future`가 lazy하다는 점과, spawn 시점에 captured sta
 - `select!`: timeout, cancellation, first-response-wins 패턴을 표현할 때
 - `Rc`를 spawned task로 넘기기: `Send` 제약을 무시하는 대표적인 실수다
 
+## 실무 판단 기준
+
+- async 코드라고 해서 모든 것을 task로 쪼개지 않는다. 동시성 이득보다 상태 분산 비용이 더 크면 순차 흐름이 낫다.
+- `Arc<Mutex<T>>`는 빠른 탈출구이지만, 가능하면 channel로 ownership을 넘기거나 상태를 더 잘게 나누는 구조를 먼저 본다.
+- blocking I/O나 CPU 바운드 작업은 runtime worker를 오래 점유하지 않게 분리해야 한다.
+- cancellation, timeout, shutdown은 보너스 기능이 아니라 처음부터 제어 흐름에 들어가야 운영 중 사고가 줄어든다.
+
 ## Takeaway
 
 - async Rust는 runtime 개념과 ownership 개념이 합쳐진 모델이다.

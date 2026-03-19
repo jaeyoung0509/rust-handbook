@@ -70,6 +70,13 @@ ownership은 단순히 "값 하나는 주인 하나"라는 규칙이 아니다. 
 - `T` by value: ownership 이전 자체가 도메인 의미일 때
 - 불필요한 `clone`: "왜 ownership이 필요하지?"라는 질문을 회피하게 만들 때
 
+## 실무 판단 기준
+
+- API 설계는 기본적으로 `&T` 또는 `&mut T`에서 시작하고, ownership 이전은 의미가 분명할 때만 올린다.
+- borrow checker를 피해 가려고 reference 수명을 억지로 늘리기보다 scope를 줄이고 데이터 흐름을 단순화하는 편이 낫다.
+- async task, thread, 캐시 경계처럼 소유권을 분리해야 하는 지점에서는 의도적인 clone이 오히려 더 정직할 수 있다.
+- 한 함수가 너무 많은 `&mut`를 요구하면 값 하나가 너무 많은 책임을 가진다는 신호일 수 있다.
+
 ## Takeaway
 
 - ownership은 성능 최적화 기능이 아니라 관계를 명시하는 설계 도구다.
