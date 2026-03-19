@@ -23,7 +23,7 @@ export interface PartMeta {
 export const book = {
   title: "Rust Handbook",
   description:
-    "Python/Go 개발자가 Rust를 왜 배우고 언제 써야 하는지까지 이해하도록 돕는 deep dive handbook",
+    "Python/Go 개발자가 Rust를 문법이 아니라 설계, 성능, 동시성 판단까지 포함해 깊게 이해하도록 돕는 handbook",
   repository: "https://github.com/jaeyoung0509/rust-handbook",
   homepage: "https://jaeyoung0509.github.io/rust-handbook/",
 };
@@ -51,7 +51,9 @@ export const parts: PartMeta[] = [
     plannedTopics: [
       "왜 Rust가 Python/Go보다 더 많은 제약을 두는가",
       "stack, heap, ownership을 보는 기본 프레임",
-      "Cargo workflow와 compiler clinic 읽는 법",
+      "Cargo, workspace, feature flag, toolchain을 읽는 법",
+      "compiler diagnostics와 clippy를 설계 피드백 루프로 쓰는 법",
+      "표준 라이브러리와 crate 문서를 빠르게 해석하는 습관",
     ],
   },
   {
@@ -77,6 +79,8 @@ export const parts: PartMeta[] = [
       "`String`과 `&str`의 경계",
       "`Vec`, slice, pattern matching으로 데이터 읽기",
       "enum과 `match`로 상태를 닫아두기",
+      "borrow splitting, iterator borrowing, clone 냄새 읽기",
+      "함수 인자와 반환 타입에서 ownership 경계를 설계하는 법",
     ],
   },
   {
@@ -102,6 +106,8 @@ export const parts: PartMeta[] = [
       "trait가 인터페이스가 아니라 capability contract인 이유",
       "`From`/`Into`, `AsRef`, `Default`로 ergonomics 높이기",
       "에러 타입 설계와 `?` 연산자 읽기",
+      "공개 API에서 generic, concrete type, trait object를 고르는 기준",
+      "모듈 경계와 visibility를 통해 변경 비용을 제어하는 방법",
     ],
   },
   {
@@ -127,6 +133,8 @@ export const parts: PartMeta[] = [
       "`Rc`/`Arc`와 shared ownership",
       "`RefCell`과 runtime borrow checking",
       "iterator와 closure가 borrow 관계를 전파하는 방식",
+      "reference를 담는 struct와 zero-copy parser 설계",
+      "annotation보다 재설계가 먼저인 lifetime 문제를 구분하는 법",
     ],
   },
   {
@@ -152,6 +160,8 @@ export const parts: PartMeta[] = [
       "`Future`와 pinning을 mental model로 이해하기",
       "cancellation, timeout, graceful shutdown",
       "async I/O trait와 stream-like 패턴",
+      "backpressure, channel sizing, ownership transfer 설계",
+      "`Arc<Mutex<T>>`를 쓰기 전에 점검할 구조적 대안",
     ],
   },
 ];
