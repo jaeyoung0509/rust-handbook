@@ -10,3 +10,17 @@ func SumFirstTwo(values []int) (int, bool) {
 }
 
 // #endregion slice-view
+
+// #region borrow-splitting
+func BumpFirstTwo(values []int, delta int) (int, int, bool) {
+	if len(values) < 2 {
+		return 0, 0, false
+	}
+
+	values[0] += delta
+	values[1] += delta
+
+	return values[0], values[1], true
+}
+
+// #endregion borrow-splitting

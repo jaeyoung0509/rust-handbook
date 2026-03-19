@@ -1,11 +1,9 @@
 package snippets
 
 // #region enum-match-compare
-type PublishingState int
-
-const (
-	Draft PublishingState = iota
-	InReview
-	Published
-)
+type Publication struct {
+	Status    string
+	Reviewers int
+	Published bool
+}
 // #endregion enum-match-compare

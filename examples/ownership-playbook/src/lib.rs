@@ -41,6 +41,18 @@ pub fn append_tag(buffer: &mut String, tag: &str) {
 }
 // #endregion mutable-borrow
 
+// #region split-first-two
+pub fn bump_first_two(scores: &mut [i32], delta: i32) -> Option<(i32, i32)> {
+    let (first, rest) = scores.split_first_mut()?;
+    let second = rest.first_mut()?;
+
+    *first += delta;
+    *second += delta;
+
+    Some((*first, *second))
+}
+// #endregion split-first-two
+
 // #region publishing-state
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum PublishingState {
@@ -58,11 +70,26 @@ pub fn state_message(state: PublishingState) -> String {
 }
 // #endregion publishing-state
 
+// #region publication-banner
+pub fn publication_banner(title: &str, state: PublishingState) -> String {
+    match state {
+        PublishingState::Draft => format!("{title}는 초안이다"),
+        PublishingState::InReview { reviewers: 0 } => {
+            format!("{title}는 아직 리뷰어가 배정되지 않았다")
+        }
+        PublishingState::InReview { reviewers } => {
+            format!("{title}는 리뷰어 {reviewers}명과 함께 검토 중이다")
+        }
+        PublishingState::Published => format!("{title}는 이미 배포되었다"),
+    }
+}
+// #endregion publication-banner
+
 #[cfg(test)]
 mod tests {
     use super::{
-        append_tag, describe_score_window, normalize_username, promote_title, state_message,
-        sum_first_two, PublishingState,
+        append_tag, bump_first_two, describe_score_window, normalize_username, promote_title,
+        publication_banner, state_message, sum_first_two, PublishingState,
     };
 
     #[test]
@@ -78,6 +105,15 @@ mod tests {
         append_tag(&mut title, "borrow checker");
 
         assert_eq!(title, "ownership::deep-dive | slices | borrow checker");
+    }
+
+    #[test]
+    fn borrow_splitting_updates_disjoint_elements_without_clone() {
+        let mut scores = vec![3, 5, 8, 13];
+        let updated = bump_first_two(&mut scores, 2);
+
+        assert_eq!(updated, Some((5, 7)));
+        assert_eq!(scores, vec![5, 7, 8, 13]);
     }
 
     #[test]
@@ -99,5 +135,21 @@ mod tests {
             "검토 중: 리뷰어 2명"
         );
         assert_eq!(state_message(PublishingState::Published), "배포 완료");
+        assert_eq!(
+            publication_banner("ownership", PublishingState::Draft),
+            "ownership는 초안이다"
+        );
+        assert_eq!(
+            publication_banner("ownership", PublishingState::InReview { reviewers: 0 }),
+            "ownership는 아직 리뷰어가 배정되지 않았다"
+        );
+        assert_eq!(
+            publication_banner("ownership", PublishingState::InReview { reviewers: 2 }),
+            "ownership는 리뷰어 2명과 함께 검토 중이다"
+        );
+        assert_eq!(
+            publication_banner("ownership", PublishingState::Published),
+            "ownership는 이미 배포되었다"
+        );
     }
 }
