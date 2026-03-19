@@ -1,0 +1,10 @@
+error[E0502]: cannot borrow `title` as mutable because it is also borrowed as immutable
+ --> tests/ui/borrow_conflict.rs:6:5
+  |
+4 |     let borrowed = &title;
+  |                    ------ immutable borrow occurs here
+5 |
+6 |     title.push_str(" handbook");
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^ mutable borrow occurs here
+7 |     println!("{borrowed}");
+  |                -------- immutable borrow later used here

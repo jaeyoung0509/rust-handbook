@@ -32,7 +32,7 @@ flowchart TD
 
 - Rust의 엄격함을 단순한 언어 취향이 아니라 비용 이동 전략으로 설명할 수 있다.
 - 함수 시그니처를 보고 ownership 이전, borrow, allocation 가능성을 대략 읽을 수 있다.
-- compiler diagnostics를 보고 "문법이 틀렸네"가 아니라 "어떤 관계를 더 드러내야 하는가"를 질문할 수 있다.
+- compiler diagnostics를 보고 "문법이 틀렸네"가 아니라 "move, borrow, lifetime, async 중 어떤 관계가 덜 드러났는가"를 질문할 수 있다.
 - Cargo workspace, toolchain, lint를 학습 보조 도구가 아니라 설계 루프로 활용할 수 있다.
 
 ## 실무에서 반복해서 답해야 하는 질문
@@ -40,11 +40,12 @@ flowchart TD
 - 이 값은 정말 owner를 옮겨야 하나, 아니면 borrow면 충분한가
 - 지금 겪는 복잡도는 런타임에서 숨겨진 비용인가, 아니면 내가 관계를 아직 명시하지 않은 것인가
 - compiler 에러를 우회하려는 패치인가, 설계를 더 정직하게 만들려는 리팩터링인가
+- 이 에러는 ownership 이동 문제인가, borrow 충돌인가, lifetime 관계 부족인가, async 경계 문제인가
 
 ## 이 파트가 깊게 들어갈 주제
 
 - memory model을 "누가 drop 책임을 가지는가" 기준으로 읽기
-- compiler clinic을 통해 borrow checker 메시지를 해석하는 순서 만들기
+- compiler clinic을 통해 borrow checker 메시지를 분류해서 읽는 순서 만들기
 - std docs, clippy, rust-analyzer를 실무 판단 보조 도구로 쓰기
 
 ## 파일럿 챕터
