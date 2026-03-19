@@ -42,6 +42,10 @@ Rust의 차이는 `Future`가 lazy하다는 점과, spawn 시점에 captured sta
 
 <<< ../../examples/tokio-playbook/src/lib.rs#fanout-function [Rust]
 
+동시성 한계를 더 분명하게 주고 싶다면 semaphore로 parallelism을 제한한다. 이때 `Arc<Semaphore>`는 shared mutable state를 숨기는 용도보다, "동시에 몇 개까지 진행할 수 있는가"를 명시하는 용도에 가깝다.
+
+<<< ../../examples/tokio-playbook/src/lib.rs#bounded-fanout [Rust]
+
 작은 메시지는 `mpsc` channel로 흘려 보내고, sender task는 끝날 때까지 명시적으로 join한다.
 
 <<< ../../examples/tokio-playbook/src/lib.rs#channel-function [Rust]
@@ -50,9 +54,45 @@ Rust의 차이는 `Future`가 lazy하다는 점과, spawn 시점에 captured sta
 
 <<< ../../examples/tokio-playbook/src/lib.rs#select-loop [Rust]
 
+`select!`는 cancellation의 출발점이기도 하다. 느린 future는 `select!`에서 이기지 못하면 drop되기 때문에, 별도의 abort 스위치를 설계하지 않아도 "못 쓰는 경로"를 정리할 수 있다.
+
+<<< ../../examples/tokio-playbook/src/lib.rs#cancel-slow-work [Rust]
+
 문서 전체 흐름을 한 번에 보면 아래 예제처럼 runtime과 task orchestration을 묶어서 읽을 수 있다.
 
 <<< ../../examples/tokio-playbook/examples/task_orchestra.rs#tokio-main [Rust]
+
+## 3단계: backpressure를 설계한다
+
+`JoinSet`으로 작업을 많이 던지는 것과, 실제로 동시에 몇 개까지 진행할 수 있는지를 제어하는 것은 다르다. async 시스템에서 자주 터지는 문제는 "작업을 시작하는 속도"가 "처리할 수 있는 속도"보다 빠를 때다.
+
+- `mpsc` channel은 ownership 경계를 메시지로 바꾸는 도구다.
+- `Semaphore`는 throughput보다 capacity를 먼저 드러내는 도구다.
+- bounded parallelism은 `Arc<Mutex<T>>`보다 의도적으로 제한된 shared resource를 표현하기 좋다.
+
+## 4단계: cancellation은 drop과 timeout에서 시작된다
+
+Tokio에서 cancellation은 거창한 API보다 `select!`와 future drop으로 설명하는 편이 정확하다. 완료되지 않은 future를 더 이상 poll하지 않으면, 그 작업은 사실상 취소된 것이다.
+
+- timeout이 먼저 끝나면 느린 작업은 더 이상 의미가 없다.
+- shutdown 신호가 먼저 오면 새 작업을 받지 말아야 한다.
+- long-running task는 중간 checkpoint를 두고 자연스럽게 빠져나오게 설계하는 편이 낫다.
+
+## 5단계: `Arc<Mutex<T>>`가 smell인 이유
+
+`Arc<Mutex<T>>`는 틀린 해법은 아니지만, 자주 너무 이른 해법이다. 이 조합은 다음 문제를 숨기기 쉽다.
+
+- 누가 상태를 소유하는지 흐려진다.
+- lock scope가 길어지면 contention이 급격히 늘어난다.
+- async task 안에서 lock을 오래 잡으면 scheduler fairness를 해친다.
+- 사실은 channel이나 state partition으로 풀어야 하는 문제를 mutex로 덮어버리기 쉽다.
+
+권장 순서는 보통 이렇다.
+
+1. ownership transfer가 가능한지 본다.
+2. channel로 경계를 만들 수 있는지 본다.
+3. semaphore나 bounded queue로 capacity를 드러낼 수 있는지 본다.
+4. 정말 shared mutable state가 남았을 때만 `Arc<Mutex<T>>`를 쓴다.
 
 ## Compiler clinic
 
@@ -72,6 +112,7 @@ Rust의 차이는 `Future`가 lazy하다는 점과, spawn 시점에 captured sta
 - `mpsc`: task 사이 ownership 경계를 메시지로 끊고 싶을 때
 - `select!`: timeout, cancellation, first-response-wins 패턴을 표현할 때
 - `Rc`를 spawned task로 넘기기: `Send` 제약을 무시하는 대표적인 실수다
+- `Semaphore`: 동시에 진행 가능한 작업 수를 명시적으로 제한할 때
 
 ## 실무 판단 기준
 
@@ -79,6 +120,8 @@ Rust의 차이는 `Future`가 lazy하다는 점과, spawn 시점에 captured sta
 - `Arc<Mutex<T>>`는 빠른 탈출구이지만, 가능하면 channel로 ownership을 넘기거나 상태를 더 잘게 나누는 구조를 먼저 본다.
 - blocking I/O나 CPU 바운드 작업은 runtime worker를 오래 점유하지 않게 분리해야 한다.
 - cancellation, timeout, shutdown은 보너스 기능이 아니라 처음부터 제어 흐름에 들어가야 운영 중 사고가 줄어든다.
+- backpressure가 필요한 지점은 보통 task 수가 아니라 입력 수용량과 처리율이 어긋나는 지점이다.
+- `Arc<Mutex<T>>`를 썼다면 lock의 목적, scope, contention cost를 코드리뷰에서 설명할 수 있어야 한다.
 
 ## Takeaway
 
