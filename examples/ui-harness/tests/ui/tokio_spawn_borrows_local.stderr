@@ -1,0 +1,14 @@
+error[E0373]: async block may outlive the current function, but it borrows `label`, which is owned by the current function
+  --> tests/ui/tokio_spawn_borrows_local.rs:8:18
+   |
+ 8 |     tokio::spawn(async {
+   |                  ^^^^^ may outlive borrowed value `label`
+ 9 |         sleep(Duration::from_millis(1)).await;
+10 |         println!("{label}");
+   |                    ----- `label` is borrowed here
+   |
+   = note: async blocks are not executed immediately and must either take a reference or ownership of outside variables they use
+help: to force the async block to take ownership of `label` (and any other referenced variables), use the `move` keyword
+   |
+ 8 |     tokio::spawn(async move {
+   |                        ++++

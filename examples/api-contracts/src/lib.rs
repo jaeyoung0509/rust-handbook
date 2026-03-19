@@ -47,20 +47,36 @@ impl Error for NoteParseError {}
 // #region catalog-error
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum CatalogError {
-    Parse(NoteParseError),
-    NoteNotFound { title: String },
+    Parse {
+        input: String,
+        source: NoteParseError,
+    },
+    NoteNotFound {
+        title: String,
+    },
 }
 
-impl From<NoteParseError> for CatalogError {
-    fn from(error: NoteParseError) -> Self {
-        Self::Parse(error)
+impl CatalogError {
+    pub fn parse(input: impl Into<String>, source: NoteParseError) -> Self {
+        Self::Parse {
+            input: input.into(),
+            source,
+        }
+    }
+}
+
+impl From<(String, NoteParseError)> for CatalogError {
+    fn from((input, source): (String, NoteParseError)) -> Self {
+        Self::Parse { input, source }
     }
 }
 
 impl Display for CatalogError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Self::Parse(error) => write!(f, "parse error: {error}"),
+            Self::Parse { input, source } => {
+                write!(f, "parse error in `{input}`: {source}")
+            }
             Self::NoteNotFound { title } => write!(f, "note not found: {title}"),
         }
     }
@@ -69,7 +85,7 @@ impl Display for CatalogError {
 impl Error for CatalogError {
     fn source(&self) -> Option<&(dyn Error + 'static)> {
         match self {
-            Self::Parse(error) => Some(error),
+            Self::Parse { source, .. } => Some(source),
             Self::NoteNotFound { .. } => None,
         }
     }
@@ -105,9 +121,15 @@ pub fn parse_note_line(line: &str) -> Result<Note, NoteParseError> {
 }
 // #endregion parse-note-line
 
+// #region catalog-parse-note-line
+pub fn parse_catalog_note(line: &str) -> Result<Note, CatalogError> {
+    parse_note_line(line).map_err(|error| (line.to_string(), error).into())
+}
+// #endregion catalog-parse-note-line
+
 // #region preview-note-line
 pub fn preview_note_line(notes: &[Note], line: &str) -> Result<String, CatalogError> {
-    let parsed = parse_note_line(line)?;
+    let parsed = parse_catalog_note(line)?;
     let note = find_note(notes, &parsed.title).ok_or_else(|| CatalogError::NoteNotFound {
         title: parsed.title.clone(),
     })?;
@@ -145,9 +167,11 @@ where
 
 #[cfg(test)]
 mod tests {
+    use std::error::Error;
+
     use super::{
-        CatalogError, Note, NoteParseError, Summary, display_badge, find_note, parse_label,
-        parse_note_line, preview_note_line, render_summary,
+        CatalogError, Note, NoteParseError, Summary, display_badge, find_note, parse_catalog_note,
+        parse_label, parse_note_line, preview_note_line, render_summary,
     };
 
     #[test]
@@ -178,7 +202,9 @@ mod tests {
 
         assert!(find_note(&notes, "missing").is_none());
         assert_eq!(
-            parse_note_line("Option | absence").expect("valid note").title,
+            parse_catalog_note("Option | absence")
+                .expect("valid note")
+                .title,
             "Option"
         );
         assert_eq!(
@@ -196,6 +222,38 @@ mod tests {
             CatalogError::NoteNotFound {
                 title: "Missing".to_string()
             }
+        );
+        let layered_err = parse_catalog_note("broken input").expect_err("missing separator");
+        assert_eq!(
+            layered_err,
+            CatalogError::Parse {
+                input: "broken input".to_string(),
+                source: NoteParseError::MissingSeparator,
+            }
+        );
+        assert_eq!(
+            layered_err.source().map(ToString::to_string),
+            Some("missing `|` separator".to_string())
+        );
+
+        let preview_parse_err =
+            preview_note_line(&notes, "broken input").expect_err("missing separator");
+        assert_eq!(
+            preview_parse_err,
+            CatalogError::Parse {
+                input: "broken input".to_string(),
+                source: NoteParseError::MissingSeparator,
+            }
+        );
+        assert_eq!(
+            preview_parse_err.source().map(ToString::to_string),
+            Some("missing `|` separator".to_string())
+        );
+
+        let preview_err = preview_note_line(&notes, "Missing | note").expect_err("missing note");
+        assert_eq!(
+            preview_err.to_string(),
+            "note not found: Missing".to_string()
         );
     }
 }

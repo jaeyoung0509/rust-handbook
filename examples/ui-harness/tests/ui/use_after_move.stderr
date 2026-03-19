@@ -1,5 +1,5 @@
 error[E0382]: borrow of moved value: `title`
- --> tests/ui/use_after_move.rs:6:15
+ --> tests/ui/use_after_move.rs:6:16
   |
 3 |     let title = String::from("ownership");
   |         ----- move occurs because `title` has type `String`, which does not implement the `Copy` trait
@@ -7,7 +7,7 @@ error[E0382]: borrow of moved value: `title`
   |                 ----- value moved here
 5 |
 6 |     println!("{title} / {moved}");
-  |               ^^^^^^^ value borrowed here after move
+  |                ^^^^^ value borrowed here after move
   |
   = note: this error originates in the macro `$crate::format_args_nl` which comes from the expansion of the macro `println` (in Nightly builds, run with -Z macro-backtrace for more info)
 help: consider cloning the value if the performance cost is acceptable
