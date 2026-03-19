@@ -75,3 +75,8 @@ ownership은 단순히 "값 하나는 주인 하나"라는 규칙이 아니다. 
 - ownership은 성능 최적화 기능이 아니라 관계를 명시하는 설계 도구다.
 - borrow는 "복사하지 않는다"보다 "ownership을 빼앗지 않는다"는 의미가 더 중요하다.
 - `&mut`를 보면 mutation scope와 API 책임이 동시에 드러난다.
+
+## 다음 읽을거리
+
+- [String과 &str, slice를 함께 읽기](/part-2/strings-and-slices)
+- [Enum과 match로 상태를 닫아두기](/part-2/enums-and-matching)

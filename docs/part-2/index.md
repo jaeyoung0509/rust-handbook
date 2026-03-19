@@ -1,6 +1,6 @@
 ---
 title: Part 2. Ownership-backed fundamentals
-description: move, borrow, slice, String/&str, Vec를 복사 비용과 aliasing 관점으로 정리한다
+description: move, borrow, String/&str, slice, enum/match를 복사 비용과 aliasing 관점으로 정리한다
 part: 2
 order: 0
 prerequisites:
@@ -18,3 +18,8 @@ prerequisites:
 ## 파일럿과 확장 로드맵
 
 <PartRoadmap part-id="ownership-fundamentals" />
+
+## 추가 챕터
+
+- [String과 &str, slice를 함께 읽기](/part-2/strings-and-slices)
+- [Enum과 match로 상태를 닫아두기](/part-2/enums-and-matching)
