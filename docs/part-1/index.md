@@ -51,6 +51,7 @@ flowchart TD
 ## 파일럿 챕터
 
 - [왜 Rust는 이렇게 빡빡하게 느껴질까](/part-1/strictness)
+- [Compiler Clinic](/part-1/compiler-clinic)
 
 ## 현재 파일럿 이후 확장할 주제
 

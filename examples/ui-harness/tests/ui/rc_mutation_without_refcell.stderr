@@ -1,0 +1,7 @@
+error[E0596]: cannot borrow data in an `Rc` as mutable
+ --> tests/ui/rc_mutation_without_refcell.rs:7:5
+  |
+7 |     draft.push(String::from("review requested"));
+  |     ^^^^^ cannot borrow as mutable
+  |
+  = help: trait `DerefMut` is required to modify through a dereference, but it is not implemented for `Rc<Vec<String>>`

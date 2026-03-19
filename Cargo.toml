@@ -3,6 +3,7 @@ members = [
   "examples/api-contracts",
   "examples/ownership-playbook",
   "examples/lifetime-lab",
+  "examples/shared-ownership-lab",
   "examples/tokio-playbook",
   "examples/ui-harness",
 ]
